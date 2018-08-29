@@ -29,9 +29,25 @@ const buildTask = (text: string): ITask => ({
   text
 });
 
+const updateDone = (tasks: ITask[], taskId: number): ITask[] =>
+  tasks.map(task => {
+    if (task.id === taskId) {
+      task.done = true;
+    }
+    return task;
+  });
+
 export default reducerWithInitialState(initialReduceTodoState)
   .case(actions.addTodo, (state: ITodoState, payload) => ({
     ...state,
     tasks: state.tasks.concat(buildTask(payload))
+  }))
+  .case(actions.deleteTodo, (state: ITodoState, payload) => ({
+    ...state,
+    tasks: state.tasks.filter(task => task.id !== payload)
+  }))
+  .case(actions.updateDoneTodo, (state: ITodoState, payload) => ({
+    ...state,
+    tasks: updateDone(state.tasks, payload)
   }))
   .build();

@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Dispatch } from "redux";
-import { addTodo } from "./action";
+import { addTodo, deleteTodo, updateDoneTodo } from "./action";
 import { ITodoState } from "./reducer";
 
 interface IProps extends ITodoState {
@@ -25,8 +25,38 @@ export default class extends React.Component<IProps, IState> {
     this.props.dispatch(addTodo(this.state.text));
   };
 
+  public renderDoneBtn = (taskId: number) => (
+    <button
+      onClick={() => {
+        this.props.dispatch(updateDoneTodo(taskId));
+      }}
+    >
+      DONE
+    </button>
+  );
+
+  public renderDeleteBtn = (taskId: number) => (
+    <button
+      onClick={() => {
+        this.props.dispatch(deleteTodo(taskId));
+      }}
+    >
+      Delete
+    </button>
+  );
+
+  public renderDone = (done: boolean) => (done ? <span>done!</span> : null);
+
   public renderTodoList = () =>
-    this.props.tasks.map(task => <li key={task.id.toString()}>{task.text}</li>);
+    this.props.tasks.map(task => (
+      <li key={task.id.toString()}>
+        <span>{task.id}</span>
+        <span>{task.text}</span>
+        {this.renderDeleteBtn(task.id)}
+        {this.renderDoneBtn(task.id)}
+        {this.renderDone(task.done)}
+      </li>
+    ));
 
   public render() {
     return (
